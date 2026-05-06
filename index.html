@@ -1,140 +1,205 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirchi 360</title>
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#111;color:white}
-h1{text-align:center;color:gold}
+body{margin:0;font-family:Arial;background:#0f0f0f;color:#fff}
+h1{text-align:center;color:#f4c430}
 
-.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:20px}
+.container{padding:20px}
 
-.card{background:#1b1b1b;border-radius:10px;overflow:hidden}
-.card img{width:100%;height:160px;object-fit:cover}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+
+.card{background:#1c1c1c;border-radius:10px;overflow:hidden;transition:0.3s}
+.card:hover{transform:scale(1.03)}
+.card img{width:100%;height:150px;object-fit:cover}
 .card-body{padding:15px}
-.price{color:gold;font-weight:bold}
 
-button{background:gold;border:none;padding:8px 12px;margin-top:8px;border-radius:5px;cursor:pointer}
+.price{color:#f4c430;font-weight:bold}
 
-.cart{position:fixed;right:0;top:0;width:300px;height:100%;background:#000;padding:15px;overflow:auto}
+button{
+  background:#f4c430;
+  border:none;
+  padding:6px 10px;
+  border-radius:5px;
+  cursor:pointer;
+  margin-top:5px;
+}
 
-.map{text-align:center;margin:15px}
-.map a{background:gold;color:black;padding:10px 20px;text-decoration:none;border-radius:5px}
+.cart{
+  position:fixed;
+  right:0;
+  top:0;
+  width:280px;
+  height:100%;
+  background:#000;
+  padding:15px;
+  overflow:auto;
+}
 
-.whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;color:white;font-size:20px}
+input{
+  padding:8px;
+  margin:5px;
+  width:80%;
+}
+
+.admin, .login{text-align:center;padding:20px}
 </style>
 </head>
 
 <body>
 
 <h1>Mirchi 360</h1>
-
-<div class="map">
-  <a href="https://maps.app.goo.gl/1wfT7HJ5fLgqWELXA" target="_blank">
-    📍 View Location
-  </a>
-</div>
-
 <div id="root"></div>
 
-<a class="whatsapp" href="https://wa.me/923324187360" target="_blank">💬</a>
-
-<script type="text/babel">
-
-// tumhari images (uploaded)
-const customImages = [
-  "file_000000008e6c7209807760bf228a6730",
-  "file_000000000ebc72098479d35b3828394f",
-  "file_00000000f73072099f89137f9e615685",
-  "file_00000000d9a47209b71f903b233c2146",
-  "file_0000000098147209b8ced87f1531b750",
-  "file_000000001d547209995d2cebd73261c0",
-  "file_00000000b16c72098fa2049748346b54",
-  "file_0000000069607209b0b316b0e95be54d",
-  "file_000000000a3c720993314c13439929f2"
-];
-
-const getAutoImage = (name)=>{
-  return `https://source.unsplash.com/400x300/?${name},food`;
-};
-
-const MENU = [
-  {name:"Zinger Burger",price:530,img:customImages[0]},
-  {name:"Pizza",price:1300,img:customImages[1]},
-  {name:"Pasta",price:950,img:customImages[2]},
-  {name:"BBQ Platter",price:1800,img:customImages[3]},
-  {name:"Chicken Wings",price:600,img:customImages[4]},
-  {name:"Fries",price:250,img:customImages[5]},
-  {name:"Sandwich",price:400,img:customImages[6]},
-  {name:"Special Dish",price:1500,img:customImages[7]},
-  {name:"Sea Food",price:2000,img:customImages[8]},
-
-  // auto items
-  {name:"Biryani",price:1050},
-  {name:"Karahi",price:1200},
-  {name:"Roll",price:280},
-  {name:"Burger",price:500},
-  {name:"Ice Cream",price:300}
-];
+<script>
+const e = React.createElement;
 
 function App(){
-  const [cart,setCart]=React.useState([]);
 
-  const add=(item)=>{
+  const [menu,setMenu] = React.useState(()=>{
+    try{
+      const saved = localStorage.getItem("menu");
+      return saved ? JSON.parse(saved) : [
+        {name:"Zinger Burger",price:530},
+        {name:"Pizza",price:1300},
+        {name:"Biryani",price:1050}
+      ];
+    }catch{
+      return [];
+    }
+  });
+
+  const [cart,setCart] = React.useState([]);
+  const [isAdmin,setIsAdmin] = React.useState(false);
+  const [login,setLogin] = React.useState({user:"",pass:""});
+  const [newItem,setNewItem] = React.useState({name:"",price:""});
+
+  React.useEffect(()=>{
+    localStorage.setItem("menu",JSON.stringify(menu));
+  },[menu]);
+
+  const getImage = (name)=>{
+    return "https://picsum.photos/400/300?random=" + encodeURIComponent(name);
+  };
+
+  // LOGIN
+  const handleLogin = ()=>{
+    if(login.user==="admin" && login.pass==="1234"){
+      setIsAdmin(true);
+    }else{
+      alert("Invalid login");
+    }
+  };
+
+  // ADMIN ACTIONS
+  const addItem = ()=>{
+    if(!newItem.name || !newItem.price) return;
+    setMenu([...menu,{name:newItem.name,price:Number(newItem.price)}]);
+    setNewItem({name:"",price:""});
+  };
+
+  const deleteItem = (index)=>{
+    setMenu(menu.filter((_,i)=>i!==index));
+  };
+
+  // CART
+  const addToCart = (item)=>{
     setCart([...cart,item]);
-  }
+  };
 
-  const total=cart.reduce((sum,i)=>sum+i.price,0);
+  const total = cart.reduce((sum,i)=>sum+i.price,0);
 
-  const order=()=>{
-    let text="*Mirchi 360 Order*%0A";
+  const order = ()=>{
+    let text="Mirchi 360 Order\n";
     cart.forEach(i=>{
-      text+=i.name+" - Rs "+i.price+"%0A";
+      text+=`${i.name} - Rs ${i.price}\n`;
     });
-    text+="Total: Rs "+total;
+    text+=`Total: Rs ${total}`;
 
-    window.open("https://wa.me/923324187360?text="+text);
+    window.open(`https://wa.me/923324187360?text=${encodeURIComponent(text)}`);
+  };
+
+  // ADMIN PANEL
+  if(isAdmin){
+    return e("div",{className:"admin"},
+      e("h2",null,"Admin Panel"),
+
+      e("input",{
+        placeholder:"Food Name",
+        value:newItem.name,
+        onChange:(ev)=>setNewItem({...newItem,name:ev.target.value})
+      }),
+
+      e("input",{
+        placeholder:"Price",
+        value:newItem.price,
+        onChange:(ev)=>setNewItem({...newItem,price:ev.target.value})
+      }),
+
+      e("br"),
+
+      e("button",{onClick:addItem},"Add Item"),
+
+      e("h3",null,"Menu Items"),
+
+      menu.map((item,i)=>
+        e("div",{key:i},
+          `${item.name} - Rs ${item.price} `,
+          e("button",{onClick:()=>deleteItem(i)},"Delete")
+        )
+      ),
+
+      e("br"),
+      e("button",{onClick:()=>setIsAdmin(false)},"Logout")
+    );
   }
 
-  return(
-    <>
-      <div className="menu">
-        {MENU.map((item,i)=>(
-          <div className="card" key={i}>
-            <img src={item.img || getAutoImage(item.name)} />
-            <div className="card-body">
-              <h3>{item.name}</h3>
-              <p className="price">₨ {item.price}</p>
-              <button onClick={()=>add(item)}>Add to Cart</button>
-            </div>
-          </div>
-        ))}
-      </div>
+  // CUSTOMER VIEW
+  return e("div",{className:"container"},
 
-      <div className="cart">
-        <h2>Cart</h2>
-        {cart.map((i,idx)=>(
-          <p key={idx}>{i.name} - ₨ {i.price}</p>
-        ))}
-        <hr/>
-        <h3>Total: ₨ {total}</h3>
+    e("div",{className:"login"},
+      e("h3",null,"Admin Login"),
+      e("input",{placeholder:"Username",onChange:(e)=>setLogin({...login,user:e.target.value})}),
+      e("input",{type:"password",placeholder:"Password",onChange:(e)=>setLogin({...login,pass:e.target.value})}),
+      e("button",{onClick:handleLogin},"Login")
+    ),
 
-        {cart.length>0 && (
-          <button onClick={order}>Order on WhatsApp</button>
-        )}
-      </div>
-    </>
-  )
+    e("div",{className:"menu"},
+      menu.map((item,i)=>
+        e("div",{className:"card",key:i},
+          e("img",{src:getImage(item.name)}),
+          e("div",{className:"card-body"},
+            e("h3",null,item.name),
+            e("p",{className:"price"},"₨ "+item.price),
+            e("button",{onClick:()=>addToCart(item)},"Add to Cart")
+          )
+        )
+      )
+    ),
+
+    e("div",{className:"cart"},
+      e("h3",null,"Cart"),
+
+      cart.map((i,idx)=>
+        e("p",{key:idx},`${i.name} - Rs ${i.price}`)
+      ),
+
+      e("h4",null,"Total: Rs "+total),
+
+      cart.length>0 &&
+      e("button",{onClick:order},"Order WhatsApp")
+    )
+  );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>)
-
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
 </script>
 
 </body>
