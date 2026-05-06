@@ -12,13 +12,13 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBnLcgZwm6aLWuTNrhvHJBVttSbiakaV2M",
-  authDomain: "mirchi-360-88bd9.firebaseapp.com",
-  projectId: "mirchi-360-88bd9",
-  storageBucket: "mirchi-360-88bd9.firebasestorage.app",
-  messagingSenderId: "721928045541",
-  appId: "1:721928045541:web:f5121492982ab0a6df650c",
-  measurementId: "G-1V9FGDH1W1"
+  apiKey: "AIzaSyC7I-qQ7vFWOfsaAGYh9Q35RkV60j_hkQA",
+  authDomain: "mirchi-360-new.firebaseapp.com",
+  projectId: "mirchi-360-new",
+  storageBucket: "mirchi-360-new.firebasestorage.app",
+  messagingSenderId: "521251453403",
+  appId: "1:521251453403:web:3e663b1184b14db98a8ffe",
+  measurementId: "G-V12DTQDKBH"
 };
 
 // Initialize Firebase
