@@ -1,18 +1,16 @@
-let menu = [];
-
 // 🔥 Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
-// 🔥 Firebase config (tumhara)
+// 🔥 Config
 const firebaseConfig = {
-  apiKey: "AIzaSyC7I-qQ7vFWOfsaAGYh9Q35RkV60j_hkQA",
-  authDomain: "mirchi-360-new.firebaseapp.com",
-  projectId: "mirchi-360-new",
-  storageBucket: "mirchi-360-new.firebasestorage.app",
-  messagingSenderId: "521251453403",
-  appId: "1:521251453403:web:21f1eb1f2fdde8a98a8ffe"
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
 };
 
 // 🔥 Init
@@ -20,60 +18,58 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// 🔥 ADD ITEM (ADMIN)
+let menuDiv = document.getElementById("menu");
+
+// 🔥 ADD ITEM
 window.addItem = async function () {
-  const name = document.getElementById("name").value;
-  const price = document.getElementById("price").value;
-  const file = document.getElementById("img").files[0];
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+  let file = document.getElementById("img").files[0];
 
   if (!name || !price || !file) {
-    alert("Fill all fields");
+    alert("Sab fields fill karo!");
     return;
   }
 
-  try {
-    // upload image
-    const storageRef = ref(storage, "foods/" + file.name);
-    await uploadBytes(storageRef, file);
-    const imageUrl = await getDownloadURL(storageRef);
+  // upload image
+  const storageRef = ref(storage, "foods/" + file.name);
+  await uploadBytes(storageRef, file);
 
-    // save data
-    await addDoc(collection(db, "menu"), {
-      name: name,
-      price: Number(price),
-      image: imageUrl
-    });
+  const url = await getDownloadURL(storageRef);
 
-    alert("Item Added Successfully!");
-    loadMenu();
+  // save data
+  await addDoc(collection(db, "menu"), {
+    name: name,
+    price: price,
+    image: url
+  });
 
-  } catch (err) {
-    console.error(err);
-    alert("Error adding item");
-  }
+  alert("Item added!");
+
+  loadMenu(); // refresh menu
 };
 
 // 🔥 LOAD MENU
 async function loadMenu() {
-  const menuDiv = document.getElementById("menu");
   menuDiv.innerHTML = "";
 
   const querySnapshot = await getDocs(collection(db, "menu"));
 
-  querySnapshot.forEach(doc => {
-    const item = doc.data();
+  querySnapshot.forEach((doc) => {
+    let data = doc.data();
 
-    menuDiv.innerHTML += `
-      <div class="card">
-        <img src="${item.image}" style="width:100%;height:160px;object-fit:cover">
-        <div class="card-body">
-          <h3>${item.name}</h3>
-          <p class="price">Rs ${item.price}</p>
-        </div>
-      </div>
+    let card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${data.image}">
+      <h3>${data.name}</h3>
+      <p>Rs. ${data.price}</p>
     `;
+
+    menuDiv.appendChild(card);
   });
 }
 
-// 🔥 RUN
+// 🔥 AUTO LOAD
 loadMenu();
