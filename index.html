@@ -2,14 +2,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirchi 360</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>🔥 Mirchi 360</h1>
+<!-- 🔥 Splash Screen -->
+<div id="splash">
+  <h1>🔥 Mirchi 360</h1>
+</div>
 
+<!-- 🔥 Header -->
+<header>
+  <h1>🔥 Mirchi 360</h1>
+</header>
+
+<!-- 🔥 Admin Panel -->
 <div class="admin">
   <input id="name" placeholder="Food Name">
   <input id="price" placeholder="Price">
@@ -17,11 +28,27 @@
   <button onclick="addItem()">Add Food</button>
 </div>
 
+<!-- 🔥 Menu -->
 <div id="menu" class="menu"></div>
 
+<!-- 🔥 Cart -->
 <h2>Cart</h2>
 <div id="cart"></div>
-<button onclick="orderNow()">Order WhatsApp</button>
+
+<button onclick="orderWhatsApp()">Order WhatsApp</button>
+
+<!-- 🔥 Full Menu Image -->
+<h2 class="menu-title">Our Full Menu</h2>
+<div class="menu-image">
+  <img src="menu.jpg">
+</div>
+
+<!-- 📍 Location -->
+<div class="location">
+  <a href="https://maps.app.goo.gl/1KpRcrB91MVNsbQs6?g_st=ac" target="_blank">
+    📍 View Our Location
+  </a>
+</div>
 
 <script src="app.js"></script>
 
