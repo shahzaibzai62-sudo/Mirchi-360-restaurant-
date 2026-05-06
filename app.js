@@ -1,64 +1,61 @@
-let menuDiv = document.getElementById("menu");
-let cartDiv = document.getElementById("cartItems");
+let menu = [
+  {name:"Zinger Burger", price:530, img:"burger.jpg"},
+  {name:"Chicken Biryani", price:300, img:"biryani.jpg"},
+  {name:"Chicken Karahi", price:1200, img:"karahi.jpg"},
+  {name:"BBQ Fish", price:3000, img:"fish.jpg"},
+  {name:"Pizza", price:800, img:"pizza.jpg"},
+  {name:"Chowmein", price:1000, img:"chowmein.jpg"},
+  {name:"Cold Drink", price:120, img:"drink.jpg"}
+];
 
 let cart = [];
 
-// 🔥 ADD ITEM
-function addItem() {
-  let name = document.getElementById("name").value;
-  let price = document.getElementById("price").value;
-  let file = document.getElementById("img").files[0];
+let menuDiv = document.getElementById("menu");
 
-  let reader = new FileReader();
+menu.forEach((item,i)=>{
+  menuDiv.innerHTML += `
+  <div class="card">
+    <img src="${item.img}">
+    <h3>${item.name}</h3>
+    <p>Rs ${item.price}</p>
+    <button onclick="add(${i})">Add</button>
+  </div>`;
+});
 
-  reader.onload = function () {
-    createCard(name, price, reader.result);
-  };
+function add(i){
+  let found = cart.find(c=>c.name===menu[i].name);
 
-  if (file) {
-    reader.readAsDataURL(file);
+  if(found){
+    found.qty++;
+  }else{
+    cart.push({...menu[i], qty:1});
   }
+
+  showCart();
 }
 
-// 🔥 CREATE CARD
-function createCard(name, price, img) {
-  let card = document.createElement("div");
-  card.className = "card";
+function showCart(){
+  let html="";
+  let total=0;
 
-  card.innerHTML = `
-    <img src="${img}">
-    <h3>${name}</h3>
-    <p>Rs ${price}</p>
-    <button onclick="addToCart('${name}', ${price})">Add</button>
-  `;
-
-  menuDiv.appendChild(card);
-}
-
-// 🔥 ADD TO CART
-function addToCart(name, price) {
-  cart.push({name, price});
-  renderCart();
-}
-
-// 🔥 RENDER CART
-function renderCart() {
-  cartDiv.innerHTML = "";
-
-  cart.forEach(item => {
-    let p = document.createElement("p");
-    p.innerText = `${item.name} - Rs ${item.price}`;
-    cartDiv.appendChild(p);
-  });
-}
-
-// 🔥 WHATSAPP ORDER
-function orderWhatsApp() {
-  let text = "Order:%0A";
-
-  cart.forEach(item => {
-    text += `${item.name} - Rs ${item.price}%0A`;
+  cart.forEach(c=>{
+    total += c.price*c.qty;
+    html += `<p>${c.name} x ${c.qty}</p>`;
   });
 
-  window.open(`https://wa.me/?text=${text}`);
+  document.getElementById("cartItems").innerHTML = html;
+  document.getElementById("total").innerText = total;
+}
+
+function order(){
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+
+  let text = `Order:%0AName:${name}%0APhone:${phone}%0A`;
+
+  cart.forEach(c=>{
+    text += `${c.name} x ${c.qty}%0A`;
+  });
+
+  window.open("https://wa.me/923XXXXXXXXX?text=" + text);
 }
