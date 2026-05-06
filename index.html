@@ -1,56 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mirchi 360</title>
-
-<link rel="stylesheet" href="style.css">
+  <title>Mirchi 360</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- 🔥 Splash Screen -->
-<div id="splash">
-  <h1>🔥 Mirchi 360</h1>
-</div>
+<!-- LOADER -->
+<div id="loader">🔥 Mirchi 360</div>
 
-<!-- 🔥 Header -->
+<!-- HEADER -->
 <header>
-  <h1>🔥 Mirchi 360</h1>
+  <img src="logo.png" class="logo">
+  <h1>Mirchi 360</h1>
 </header>
 
-<!-- 🔥 Admin Panel -->
-<div class="admin">
+<!-- LOGIN -->
+<div id="loginBox" class="box">
+  <h2>Admin Login</h2>
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPanel" class="box" style="display:none;">
   <input id="name" placeholder="Food Name">
   <input id="price" placeholder="Price">
   <input type="file" id="img">
   <button onclick="addItem()">Add Food</button>
 </div>
 
-<!-- 🔥 Menu -->
+<!-- MENU IMAGE -->
+<h2>Full Menu</h2>
+<img src="menu.jpg" class="menu-img">
+
+<!-- CARDS -->
 <div id="menu" class="menu"></div>
 
-<!-- 🔥 Cart -->
+<!-- CART -->
 <h2>Cart</h2>
 <div id="cart"></div>
 
-<button onclick="orderWhatsApp()">Order WhatsApp</button>
-
-<!-- 🔥 Full Menu Image -->
-<h2 class="menu-title">Our Full Menu</h2>
-<div class="menu-image">
-  <img src="menu.jpg">
+<!-- PAYMENT -->
+<div class="box">
+  <h3>Payment</h3>
+  <label><input type="radio" name="pay" value="Cash"> Cash</label>
+  <label><input type="radio" name="pay" value="JazzCash"> JazzCash</label>
+  <label><input type="radio" name="pay" value="EasyPaisa"> EasyPaisa</label>
 </div>
 
-<!-- 📍 Location -->
-<div class="location">
-  <a href="https://maps.app.goo.gl/1KpRcrB91MVNsbQs6?g_st=ac" target="_blank">
-    📍 View Our Location
-  </a>
-</div>
+<!-- WHATSAPP -->
+<a id="whatsappBtn" class="whatsapp">Order Now</a>
 
 <script src="app.js"></script>
-
 </body>
 </html>
