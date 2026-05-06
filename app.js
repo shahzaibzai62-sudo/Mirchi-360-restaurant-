@@ -1,75 +1,108 @@
-// 🔥 Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
-// 🔥 Config
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
+  apiKey: "AIzaSy...",
+  authDomain: "mirchi-360-new.firebaseapp.com",
+  projectId: "mirchi-360-new",
+  storageBucket: "mirchi-360-new.appspot.com",
+  messagingSenderId: "521251453403",
+  appId: "1:521251453403:web:21f1eb1f2fdde8a98a8ffe"
 };
 
-// 🔥 Init
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
 let menuDiv = document.getElementById("menu");
+let cart = [];
 
-// 🔥 ADD ITEM
+// 🔐 LOGIN
+window.login = function () {
+  if (
+    document.getElementById("username").value === "admin" &&
+    document.getElementById("password").value === "1234"
+  ) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+  } else {
+    alert("Wrong login");
+  }
+};
+
+// ➕ ADD ITEM
 window.addItem = async function () {
   let name = document.getElementById("name").value;
   let price = document.getElementById("price").value;
   let file = document.getElementById("img").files[0];
 
-  if (!name || !price || !file) {
-    alert("Sab fields fill karo!");
-    return;
-  }
-
-  // upload image
   const storageRef = ref(storage, "foods/" + file.name);
   await uploadBytes(storageRef, file);
-
   const url = await getDownloadURL(storageRef);
 
-  // save data
   await addDoc(collection(db, "menu"), {
-    name: name,
-    price: price,
+    name,
+    price,
     image: url
   });
 
-  alert("Item added!");
-
-  loadMenu(); // refresh menu
+  loadItems();
 };
 
-// 🔥 LOAD MENU
-async function loadMenu() {
+// 📥 LOAD MENU
+async function loadItems() {
   menuDiv.innerHTML = "";
+  const data = await getDocs(collection(db, "menu"));
 
-  const querySnapshot = await getDocs(collection(db, "menu"));
-
-  querySnapshot.forEach((doc) => {
-    let data = doc.data();
+  data.forEach(docu => {
+    let d = docu.data();
 
     let card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${data.image}">
-      <h3>${data.name}</h3>
-      <p>Rs. ${data.price}</p>
+      <img src="${d.image}">
+      <h3>${d.name}</h3>
+      <p>Rs ${d.price}</p>
+      <button onclick="addToCart('${d.name}','${d.price}')">Add</button>
+      <button onclick="deleteItem('${docu.id}')">Delete</button>
     `;
 
     menuDiv.appendChild(card);
   });
 }
 
-// 🔥 AUTO LOAD
-loadMenu();
+// 🗑 DELETE
+window.deleteItem = async function (id) {
+  await deleteDoc(doc(db, "menu", id));
+  loadItems();
+};
+
+// 🛒 CART
+window.addToCart = function (name, price) {
+  cart.push({ name, price });
+  renderCart();
+};
+
+function renderCart() {
+  let cartDiv = document.getElementById("cart");
+  cartDiv.innerHTML = "";
+
+  cart.forEach(i => {
+    cartDiv.innerHTML += `<p>${i.name} - Rs ${i.price}</p>`;
+  });
+}
+
+// 📲 WHATSAPP
+window.orderNow = function () {
+  let msg = "Order:%0A";
+  cart.forEach(i => {
+    msg += `${i.name} - Rs ${i.price}%0A`;
+  });
+
+  window.open("https://wa.me/923324187360?text=" + msg);
+};
+
+// AUTO LOAD
+loadItems();
