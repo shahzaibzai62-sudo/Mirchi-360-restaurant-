@@ -1,17 +1,24 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mirchi 360</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirchi 360</title>
 
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>🔥 Mirchi 360</h1>
+<!-- 🔥 HERO SECTION -->
+<div class="hero">
+  <img src="logo.png" class="logo">
 
+  <h1 class="title">🔥 Mirchi 360</h1>
+  <p class="tagline">Taste the Fire of Desi Flavours</p>
+</div>
+
+<!-- 🔥 ADMIN PANEL -->
 <div class="admin">
   <input id="name" placeholder="Food Name">
   <input id="price" placeholder="Price">
@@ -19,6 +26,15 @@
   <button onclick="addItem()">Add Food</button>
 </div>
 
+<!-- 🔥 MENU DISPLAY -->
+<h2 class="section-title">Our Menu</h2>
+
+<div class="menu-images">
+  <img src="menu1.jpg">
+  <img src="menu2.jpg">
+</div>
+
+<!-- 🔥 DYNAMIC MENU -->
 <div id="menu" class="menu"></div>
 
 <script type="module" src="app.js"></script>
