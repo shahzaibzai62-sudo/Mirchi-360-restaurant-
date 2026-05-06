@@ -1,58 +1,79 @@
 let menu = [];
-let cart = [];
 
-// 🔥 LOAD MENU FROM FIREBASE
-async function loadMenu(){
-  const querySnapshot = await window.getDocs(window.collection(window.db, "menu"));
-  menu = [];
+// 🔥 Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
-  querySnapshot.forEach((doc)=>{
-    menu.push(doc.data());
-  });
+// 🔥 Firebase config (tumhara)
+const firebaseConfig = {
+  apiKey: "AIzaSyC7I-qQ7vFWOfsaAGYh9Q35RkV60j_hkQA",
+  authDomain: "mirchi-360-new.firebaseapp.com",
+  projectId: "mirchi-360-new",
+  storageBucket: "mirchi-360-new.firebasestorage.app",
+  messagingSenderId: "521251453403",
+  appId: "1:521251453403:web:21f1eb1f2fdde8a98a8ffe"
+};
 
-  render();
-}
+// 🔥 Init
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 // 🔥 ADD ITEM (ADMIN)
-window.addItem = async function(){
+window.addItem = async function () {
   const name = document.getElementById("name").value;
   const price = document.getElementById("price").value;
-  const file = document.getElementById("image").files[0];
+  const file = document.getElementById("img").files[0];
 
-  if(!name || !price || !file){
+  if (!name || !price || !file) {
     alert("Fill all fields");
     return;
   }
 
-  const storageRef = window.ref(window.storage, "foods/" + file.name);
+  try {
+    // upload image
+    const storageRef = ref(storage, "foods/" + file.name);
+    await uploadBytes(storageRef, file);
+    const imageUrl = await getDownloadURL(storageRef);
 
-  await window.uploadBytes(storageRef, file);
-  const imageUrl = await window.getDownloadURL(storageRef);
+    // save data
+    await addDoc(collection(db, "menu"), {
+      name: name,
+      price: Number(price),
+      image: imageUrl
+    });
 
-  await window.addDoc(window.collection(window.db, "menu"), {
-    name: name,
-    price: Number(price),
-    image: imageUrl
-  });
+    alert("Item Added Successfully!");
+    loadMenu();
 
-  alert("Item Added!");
-  loadMenu();
-}
+  } catch (err) {
+    console.error(err);
+    alert("Error adding item");
+  }
+};
 
-// 🔥 RENDER MENU
-function render(){
+// 🔥 LOAD MENU
+async function loadMenu() {
   const menuDiv = document.getElementById("menu");
+  menuDiv.innerHTML = "";
 
-  if(!menuDiv) return;
+  const querySnapshot = await getDocs(collection(db, "menu"));
 
-  menuDiv.innerHTML = menu.map(item=>`
-    <div class="card">
-      <img src="${item.image}" />
-      <h3>${item.name}</h3>
-      <p>Rs ${item.price}</p>
-    </div>
-  `).join("");
+  querySnapshot.forEach(doc => {
+    const item = doc.data();
+
+    menuDiv.innerHTML += `
+      <div class="card">
+        <img src="${item.image}" style="width:100%;height:160px;object-fit:cover">
+        <div class="card-body">
+          <h3>${item.name}</h3>
+          <p class="price">Rs ${item.price}</p>
+        </div>
+      </div>
+    `;
+  });
 }
 
-// 🔥 LOAD ON START
+// 🔥 RUN
 loadMenu();
