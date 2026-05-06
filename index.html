@@ -2,50 +2,28 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirchi 360</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- 🔥 HEADER -->
-<header>
-  <img src="logo.png" class="logo">
-  <h1>🔥 Mirchi 360</h1>
-</header>
+<h1>🔥 Mirchi 360</h1>
 
-<!-- 🔐 LOGIN -->
-<div id="loginBox" class="admin">
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
-
-<!-- 👨‍💻 ADMIN PANEL -->
-<div id="adminPanel" class="admin" style="display:none;">
+<div class="admin">
   <input id="name" placeholder="Food Name">
   <input id="price" placeholder="Price">
   <input type="file" id="img">
   <button onclick="addItem()">Add Food</button>
 </div>
 
-<!-- 🍔 MENU -->
-<h2>Menu</h2>
 <div id="menu" class="menu"></div>
 
-<!-- 🛒 CART -->
-<h2>Your Cart</h2>
+<h2>Cart</h2>
 <div id="cart"></div>
-<button onclick="orderNow()">📲 Order on WhatsApp</button>
+<button onclick="orderNow()">Order WhatsApp</button>
 
-<!-- 📍 LOCATION -->
-<h2>Location</h2>
-<a href="https://maps.app.goo.gl/1wfT7HJ5fLgqWELXA" target="_blank">
-  📍 Open Map
-</a>
-
-<script type="module" src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
