@@ -1,118 +1,53 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mirchi 360 - Premium Restaurant</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"><style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#0a0a0a;color:white;scroll-behavior:smooth}
+<title>Mirchi 360</title>
 
-/* NAV */
-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);position:fixed;width:100%;z-index:100}
-nav h1{color:#facc15}
-nav a{color:white;margin-left:20px;text-decoration:none;transition:0.3s}
-nav a:hover{color:#facc15}
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
-/* HERO */
-.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#000,#111)}
-.hero img{width:140px;border-radius:50%;box-shadow:0 0 30px #facc15;animation:glow 2s infinite alternate}
-@keyframes glow{from{box-shadow:0 0 10px #facc15}to{box-shadow:0 0 40px #facc15}}
-.hero h2{font-size:50px;color:#facc15;margin-top:20px}
-.hero p{opacity:0.8}
-.hero button{margin-top:20px;padding:12px 25px;background:#facc15;border:none;border-radius:8px;cursor:pointer}
+</head>
+<body>
 
-/* MENU */
-.menu{padding:80px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
-.card{background:#111;border-radius:15px;padding:15px;transition:0.3s}
-.card:hover{transform:translateY(-10px);box-shadow:0 0 25px #facc15}
-.card img{width:100%;height:160px;object-fit:cover;border-radius:10px}
-.card h3{margin-top:10px}
-.btn{background:#facc15;border:none;padding:10px;margin-top:10px;border-radius:8px;cursor:pointer;width:100%}
+<!-- HEADER -->
+<header>
+  <img src="logo.png" class="logo">
+</header>
 
-/* CART */
-.cart{background:#111;margin:40px;padding:20px;border-radius:10px}
+<!-- HERO -->
+<section class="hero">
+  <div class="overlay">
+    <h1>Mirchi 360 🔥</h1>
+    <p>Premium BBQ • Fast Food • Chinese</p>
+  </div>
+</section>
 
-/* FOOTER */
-footer{text-align:center;padding:20px;background:#000;margin-top:50px}
+<!-- MENU -->
+<section id="menu" class="menu"></section>
 
-</style></head>
-<body><nav>
-<h1>Mirchi 360</h1>
-<div>
-<a href="#">Home</a>
-<a href="#menu">Menu</a>
-<a href="#contact">Contact</a>
-</div>
-</nav><section class="hero">
-<img src="logo.png">
-<h2>Mirchi 360</h2>
-<p>Premium Taste | BBQ | Fast Food | Desi</p>
-<button onclick="scrollToMenu()">Explore Menu</button>
-</section><section id="menu" class="menu"></section><div class="cart">
-<h2>🛒 Cart</h2>
-<ul id="cartItems"></ul>
-<h3>Total: Rs <span id="total">0</span></h3><h3>Payment</h3>
-<label><input type="radio" name="pay"> Cash</label>
-<label><input type="radio" name="pay"> JazzCash</label>
-<label><input type="radio" name="pay"> EasyPaisa</label><br><br> <button class="btn" onclick="orderNow()">Order on WhatsApp</button>
+<!-- CART -->
+<section class="cart">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <h3>Total: Rs <span id="total">0</span></h3>
 
-</div><section id="contact">
-<h2 style="text-align:center">📍 Location</h2>
-<iframe src="https://maps.google.com/maps?q=Mirchi%20360&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="300"></iframe>
-</section><footer>
-<p>© 2025 Mirchi 360 | Premium Restaurant Website</p>
-</footer><script>
-let menu=[
-{name:"Chicken Roll",price:280,img:"menu1.jpg"},
-{name:"Zinger Burger",price:530,img:"menu2.jpg"},
-{name:"Chicken Karahi",price:1200,img:"menu3.jpg"},
-{name:"BBQ Tikka",price:450,img:"menu4.jpg"},
-{name:"Pizza",price:850,img:"menu5.jpg"}
-];
+  <input id="name" placeholder="Your Name">
+  <input id="phone" placeholder="Phone">
 
-let cart=[];
+  <button onclick="order()">Order Now</button>
+</section>
 
-function loadMenu(){
-let html="";
-menu.forEach((m,i)=>{
-html+=`<div class="card">
-<img src="${m.img}">
-<h3>${m.name}</h3>
-<p>Rs ${m.price}</p>
-<button class="btn" onclick="addCart(${i})">Add to Cart</button>
-</div>`;
-});
-document.getElementById("menu").innerHTML=html;
-}
+<!-- MAP -->
+<section class="map">
+  <h2>📍 Location</h2>
+  <iframe src="https://www.google.com/maps?q=iECvdpyygA3gvBbB6&output=embed"></iframe>
+</section>
 
-function addCart(i){
-cart.push(menu[i]);
-showCart();
-}
+<!-- WHATSAPP -->
+<a class="whatsapp" onclick="order()">💬</a>
 
-function showCart(){
-let html="";
-let total=0;
-cart.forEach(c=>{
-html+=`<li>${c.name} - Rs ${c.price}</li>`;
-total+=c.price;
-});
-document.getElementById("cartItems").innerHTML=html;
-document.getElementById("total").innerText=total;
-}
+<script src="app.js"></script>
 
-function orderNow(){
-let text="Order:%0A";
-cart.forEach(c=>{
-text+=`${c.name} - Rs ${c.price}%0A`;
-});
-window.open("https://wa.me/923XXXXXXXXX?text="+text);
-}
-
-function scrollToMenu(){
-document.getElementById("menu").scrollIntoView({behavior:"smooth"});
-}
-
-loadMenu();
-</script></body>
+</body>
 </html>
