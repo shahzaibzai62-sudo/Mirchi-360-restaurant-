@@ -3,7 +3,27 @@ import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.c
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 // 🔴 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
+  apiKey: "AIzaSyBnLcgZwm6aLWuTNrhvHJBVttSbiakaV2M",
+  authDomain: "mirchi-360-88bd9.firebaseapp.com",
+  projectId: "mirchi-360-88bd9",
+  storageBucket: "mirchi-360-88bd9.firebasestorage.app",
+  messagingSenderId: "721928045541",
+  appId: "1:721928045541:web:f5121492982ab0a6df650c",
+  measurementId: "G-1V9FGDH1W1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
   apiKey: "YOUR_KEY",
   authDomain: "YOUR_DOMAIN",
   projectId: "YOUR_ID",
