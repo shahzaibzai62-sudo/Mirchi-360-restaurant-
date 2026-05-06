@@ -4,38 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirchi 360</title>
-
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- 🔥 HERO SECTION -->
-<div class="hero">
+<!-- 🔥 HEADER -->
+<header>
   <img src="logo.png" class="logo">
+  <h1>🔥 Mirchi 360</h1>
+</header>
 
-  <h1 class="title">🔥 Mirchi 360</h1>
-  <p class="tagline">Taste the Fire of Desi Flavours</p>
+<!-- 🔐 LOGIN -->
+<div id="loginBox" class="admin">
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
 </div>
 
-<!-- 🔥 ADMIN PANEL -->
-<div class="admin">
+<!-- 👨‍💻 ADMIN PANEL -->
+<div id="adminPanel" class="admin" style="display:none;">
   <input id="name" placeholder="Food Name">
   <input id="price" placeholder="Price">
   <input type="file" id="img">
   <button onclick="addItem()">Add Food</button>
 </div>
 
-<!-- 🔥 MENU DISPLAY -->
-<h2 class="section-title">Our Menu</h2>
-
-<div class="menu-images">
-  <img src="menu1.jpg">
-  <img src="menu2.jpg">
-</div>
-
-<!-- 🔥 DYNAMIC MENU -->
+<!-- 🍔 MENU -->
+<h2>Menu</h2>
 <div id="menu" class="menu"></div>
+
+<!-- 🛒 CART -->
+<h2>Your Cart</h2>
+<div id="cart"></div>
+<button onclick="orderNow()">📲 Order on WhatsApp</button>
+
+<!-- 📍 LOCATION -->
+<h2>Location</h2>
+<a href="https://maps.app.goo.gl/1wfT7HJ5fLgqWELXA" target="_blank">
+  📍 Open Map
+</a>
 
 <script type="module" src="app.js"></script>
 
