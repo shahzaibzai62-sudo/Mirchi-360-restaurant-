@@ -1,205 +1,163 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirchi 360</title>
 
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
 <style>
-body{margin:0;font-family:Arial;background:#0f0f0f;color:#fff}
-h1{text-align:center;color:#f4c430}
+body{margin:0;font-family:Arial;background:#111;color:white}
+h1{text-align:center;color:gold}
 
-.container{padding:20px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:20px}
 
-.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-
-.card{background:#1c1c1c;border-radius:10px;overflow:hidden;transition:0.3s}
-.card:hover{transform:scale(1.03)}
-.card img{width:100%;height:150px;object-fit:cover}
+.card{background:#1b1b1b;border-radius:10px;overflow:hidden}
+.card img{width:100%;height:160px;object-fit:cover}
 .card-body{padding:15px}
 
-.price{color:#f4c430;font-weight:bold}
+.price{color:gold;font-weight:bold}
 
-button{
-  background:#f4c430;
-  border:none;
-  padding:6px 10px;
-  border-radius:5px;
-  cursor:pointer;
-  margin-top:5px;
-}
+button{background:gold;border:none;padding:8px;border-radius:5px;cursor:pointer}
 
-.cart{
-  position:fixed;
-  right:0;
-  top:0;
-  width:280px;
-  height:100%;
-  background:#000;
-  padding:15px;
-  overflow:auto;
-}
+.cart{position:fixed;right:0;top:0;width:260px;height:100%;background:#000;padding:15px;overflow:auto}
 
-input{
-  padding:8px;
-  margin:5px;
-  width:80%;
-}
-
-.admin, .login{text-align:center;padding:20px}
+.admin{padding:20px;text-align:center}
+input{padding:8px;margin:5px;width:80%}
 </style>
 </head>
 
 <body>
 
 <h1>Mirchi 360</h1>
-<div id="root"></div>
+
+<div id="app"></div>
 
 <script>
-const e = React.createElement;
+let isAdmin = false;
+let cart = [];
 
-function App(){
+let menu = JSON.parse(localStorage.getItem("menu")) || [
+  {name:"Zinger Burger",price:530},
+  {name:"Pizza",price:1300},
+  {name:"Biryani",price:1050}
+];
 
-  const [menu,setMenu] = React.useState(()=>{
-    try{
-      const saved = localStorage.getItem("menu");
-      return saved ? JSON.parse(saved) : [
-        {name:"Zinger Burger",price:530},
-        {name:"Pizza",price:1300},
-        {name:"Biryani",price:1050}
-      ];
-    }catch{
-      return [];
-    }
-  });
-
-  const [cart,setCart] = React.useState([]);
-  const [isAdmin,setIsAdmin] = React.useState(false);
-  const [login,setLogin] = React.useState({user:"",pass:""});
-  const [newItem,setNewItem] = React.useState({name:"",price:""});
-
-  React.useEffect(()=>{
-    localStorage.setItem("menu",JSON.stringify(menu));
-  },[menu]);
-
-  const getImage = (name)=>{
-    return "https://picsum.photos/400/300?random=" + encodeURIComponent(name);
-  };
-
-  // LOGIN
-  const handleLogin = ()=>{
-    if(login.user==="admin" && login.pass==="1234"){
-      setIsAdmin(true);
-    }else{
-      alert("Invalid login");
-    }
-  };
-
-  // ADMIN ACTIONS
-  const addItem = ()=>{
-    if(!newItem.name || !newItem.price) return;
-    setMenu([...menu,{name:newItem.name,price:Number(newItem.price)}]);
-    setNewItem({name:"",price:""});
-  };
-
-  const deleteItem = (index)=>{
-    setMenu(menu.filter((_,i)=>i!==index));
-  };
-
-  // CART
-  const addToCart = (item)=>{
-    setCart([...cart,item]);
-  };
-
-  const total = cart.reduce((sum,i)=>sum+i.price,0);
-
-  const order = ()=>{
-    let text="Mirchi 360 Order\n";
-    cart.forEach(i=>{
-      text+=`${i.name} - Rs ${i.price}\n`;
-    });
-    text+=`Total: Rs ${total}`;
-
-    window.open(`https://wa.me/923324187360?text=${encodeURIComponent(text)}`);
-  };
-
-  // ADMIN PANEL
-  if(isAdmin){
-    return e("div",{className:"admin"},
-      e("h2",null,"Admin Panel"),
-
-      e("input",{
-        placeholder:"Food Name",
-        value:newItem.name,
-        onChange:(ev)=>setNewItem({...newItem,name:ev.target.value})
-      }),
-
-      e("input",{
-        placeholder:"Price",
-        value:newItem.price,
-        onChange:(ev)=>setNewItem({...newItem,price:ev.target.value})
-      }),
-
-      e("br"),
-
-      e("button",{onClick:addItem},"Add Item"),
-
-      e("h3",null,"Menu Items"),
-
-      menu.map((item,i)=>
-        e("div",{key:i},
-          `${item.name} - Rs ${item.price} `,
-          e("button",{onClick:()=>deleteItem(i)},"Delete")
-        )
-      ),
-
-      e("br"),
-      e("button",{onClick:()=>setIsAdmin(false)},"Logout")
-    );
-  }
-
-  // CUSTOMER VIEW
-  return e("div",{className:"container"},
-
-    e("div",{className:"login"},
-      e("h3",null,"Admin Login"),
-      e("input",{placeholder:"Username",onChange:(e)=>setLogin({...login,user:e.target.value})}),
-      e("input",{type:"password",placeholder:"Password",onChange:(e)=>setLogin({...login,pass:e.target.value})}),
-      e("button",{onClick:handleLogin},"Login")
-    ),
-
-    e("div",{className:"menu"},
-      menu.map((item,i)=>
-        e("div",{className:"card",key:i},
-          e("img",{src:getImage(item.name)}),
-          e("div",{className:"card-body"},
-            e("h3",null,item.name),
-            e("p",{className:"price"},"₨ "+item.price),
-            e("button",{onClick:()=>addToCart(item)},"Add to Cart")
-          )
-        )
-      )
-    ),
-
-    e("div",{className:"cart"},
-      e("h3",null,"Cart"),
-
-      cart.map((i,idx)=>
-        e("p",{key:idx},`${i.name} - Rs ${i.price}`)
-      ),
-
-      e("h4",null,"Total: Rs "+total),
-
-      cart.length>0 &&
-      e("button",{onClick:order},"Order WhatsApp")
-    )
-  );
+function saveMenu(){
+  localStorage.setItem("menu",JSON.stringify(menu));
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+function getImage(name){
+  return "https://picsum.photos/400/300?random=" + encodeURIComponent(name);
+}
+
+function render(){
+
+  const app = document.getElementById("app");
+
+  if(isAdmin){
+    app.innerHTML = `
+      <div class="admin">
+        <h2>Admin Panel</h2>
+        <input id="name" placeholder="Food Name">
+        <input id="price" placeholder="Price">
+        <br>
+        <button onclick="addItem()">Add Item</button>
+
+        <h3>Menu</h3>
+        ${menu.map((item,i)=>`
+          <div>
+            ${item.name} - Rs ${item.price}
+            <button onclick="deleteItem(${i})">Delete</button>
+          </div>
+        `).join("")}
+
+        <br>
+        <button onclick="logout()">Logout</button>
+      </div>
+    `;
+    return;
+  }
+
+  app.innerHTML = `
+    <div style="text-align:center">
+      <h3>Admin Login</h3>
+      <input id="user" placeholder="Username">
+      <input id="pass" type="password" placeholder="Password">
+      <br>
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div class="menu">
+      ${menu.map((item,i)=>`
+        <div class="card">
+          <img src="${getImage(item.name)}">
+          <div class="card-body">
+            <h3>${item.name}</h3>
+            <p class="price">₨ ${item.price}</p>
+            <button onclick="addToCart(${i})">Add</button>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="cart">
+      <h3>Cart</h3>
+      ${cart.map(i=>`<p>${i.name} - Rs ${i.price}</p>`).join("")}
+      <h4>Total: Rs ${cart.reduce((s,i)=>s+i.price,0)}</h4>
+      ${cart.length ? `<button onclick="order()">Order</button>` : ""}
+    </div>
+  `;
+}
+
+function login(){
+  const user = document.getElementById("user").value;
+  const pass = document.getElementById("pass").value;
+
+  if(user==="admin" && pass==="1234"){
+    isAdmin = true;
+    render();
+  }else{
+    alert("Wrong login");
+  }
+}
+
+function logout(){
+  isAdmin = false;
+  render();
+}
+
+function addItem(){
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+
+  if(!name || !price) return;
+
+  menu.push({name,price:Number(price)});
+  saveMenu();
+  render();
+}
+
+function deleteItem(i){
+  menu.splice(i,1);
+  saveMenu();
+  render();
+}
+
+function addToCart(i){
+  cart.push(menu[i]);
+  render();
+}
+
+function order(){
+  let text="Mirchi 360 Order\n";
+  cart.forEach(i=>{
+    text+=`${i.name} - Rs ${i.price}\n`;
+  });
+
+  window.open("https://wa.me/923324187360?text="+encodeURIComponent(text));
+}
+
+render();
 </script>
 
 </body>
