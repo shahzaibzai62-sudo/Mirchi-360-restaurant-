@@ -1,102 +1,102 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #0b132b;
+  background: linear-gradient(135deg,#0b132b,#1c2541);
   color: white;
+  text-align: center;
 }
 
-/* Splash */
-#splash {
+/* LOADER */
+#loader {
   position: fixed;
   width: 100%;
   height: 100%;
   background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  animation: fadeOut 2s forwards;
-  animation-delay: 2s;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:30px;
+  z-index:999;
+  animation: hide 2s forwards 2s;
 }
 
-#splash h1 {
-  color: #ffcc00;
-  font-size: 40px;
+@keyframes hide {
+  to {opacity:0;visibility:hidden;}
 }
 
-@keyframes fadeOut {
-  to { opacity: 0; visibility: hidden; }
-}
-
-/* Header */
+/* HEADER */
 header {
-  text-align: center;
-  padding: 20px;
-  background: #020617;
+  padding:20px;
 }
 
-/* Admin */
-.admin {
-  padding: 20px;
-  text-align: center;
+.logo {
+  width:100px;
+  border-radius:50%;
 }
 
-.admin input {
-  display: block;
-  width: 80%;
-  margin: 10px auto;
-  padding: 10px;
+/* BOX */
+.box {
+  background:#1c2541;
+  margin:20px;
+  padding:15px;
+  border-radius:10px;
 }
 
+/* INPUT */
+input {
+  padding:10px;
+  margin:5px;
+  border-radius:8px;
+  border:none;
+}
+
+/* BUTTON */
 button {
-  background: #ffcc00;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
+  padding:10px 20px;
+  background:gold;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
 }
 
-/* Menu Cards */
+/* MENU IMG */
+.menu-img {
+  width:90%;
+  border-radius:15px;
+}
+
+/* CARDS */
 .menu {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
 }
 
 .card {
-  background: #1c2541;
-  margin: 15px;
-  padding: 15px;
-  border-radius: 15px;
-  width: 200px;
-  text-align: center;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  padding:15px;
+  margin:10px;
+  border-radius:15px;
+  width:200px;
+  transition:0.3s;
+}
+
+.card:hover {
+  transform:scale(1.05);
 }
 
 .card img {
-  width: 100%;
-  border-radius: 10px;
+  width:100%;
+  border-radius:10px;
 }
 
-/* Cart */
-#cart {
-  text-align: center;
-  margin: 20px;
-}
-
-/* Menu Image */
-.menu-title {
-  text-align: center;
-  color: #ffcc00;
-}
-
-.menu-image img {
-  width: 95%;
-  margin: 20px;
-  border-radius: 15px;
-}
-
-/* Location */
-.location {
-  text-align: center;
-  margin: 40px;
+/* WHATSAPP */
+.whatsapp {
+  display:inline-block;
+  margin:20px;
+  padding:12px 20px;
+  background:#25D366;
+  color:white;
+  border-radius:10px;
 }
